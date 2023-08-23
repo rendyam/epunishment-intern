@@ -1,26 +1,16 @@
 <?php
 
-    $host="127.0.0.1";
-    $dbuser="root";
-    $dbpass="Rootkb5";
+    $host="192.168.0.27";
+    $dbuser="pkl";
+    $dbpass="Pkl@9999";
     $dbname="db_efile";
-    $dbport="3308";
-    
-    $hostPocis="192.168.0.10";
-    $dbuserPocis="pocis_supoprt";
-    $dbpassPocis="@#PoC1sSuppOrt#!";
-    $dbnamePocis="kbs_go_live";
-    
-    $host3306="127.0.0.1";
-    $dbuser3306="root";
-    $dbpass3306="Rootkb5";
+    $dbport="3306";
+
+    $host3306="192.168.0.27";
+    $dbuser3306="pkl";
+    $dbpass3306="Pkl@9999";
     $dbname3306="db_efile";
     $dbport3306="3306";
-    
-    $hostVPACS="192.168.5.190";
-    $dbuserVPACS="root";
-    $dbpassVPACS="r";
-    $dbnameVPACS="vpacs";
     
     $live_server="http://localhost:7777";
 	
