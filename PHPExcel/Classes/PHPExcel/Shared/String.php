@@ -402,13 +402,18 @@ class PHPExcel_Shared_String
 	 * @param string $value
 	 * @return boolean
 	 */
+
 	public static function IsUTF8($value = '') {
-		return $string === '' || preg_match('/^./su', $string) === 1;
+    return $value === '' || mb_check_encoding($value, 'UTF-8');
 	}
+
+	// public static function IsUTF8($value = '') {
+	// 	return $string === '' || preg_match('/^./su', $string) === 1;
+	// }
 
 	/**
 	 * Formats a numeric value as a string for output in various output writers forcing
-	 * point as decimal separator in case locale is other than English.
+	 * point as decimal separator in case locale is other than English.f
 	 *
 	 * @param mixed $value
 	 * @return string
@@ -525,20 +530,54 @@ class PHPExcel_Shared_String
 	 * @author vadik56
 	 */
 	public static function utf16_decode($str, $bom_be = TRUE) {
-		if( strlen($str) < 2 ) return $str;
-		$c0 = ord($str{0});
-		$c1 = ord($str{1});
-		if( $c0 == 0xfe && $c1 == 0xff ) { $str = substr($str,2); }
-		elseif( $c0 == 0xff && $c1 == 0xfe ) { $str = substr($str,2); $bom_be = false; }
-		$len = strlen($str);
-		$newstr = '';
-		for($i=0;$i<$len;$i+=2) {
-			if( $bom_be ) { $val = ord($str{$i})   << 4; $val += ord($str{$i+1}); }
-			else {        $val = ord($str{$i+1}) << 4; $val += ord($str{$i}); }
-			$newstr .= ($val == 0x228) ? "\n" : chr($val);
-		}
-		return $newstr;
-	}
+    $len = mb_strlen($str, 'UTF-16'); // Menghitung panjang dalam karakter UTF-16
+    if ($len < 1) return $str;
+
+    $bom_size = 2; // Panjang BOM dalam byte
+
+    // Periksa BOM dan sesuaikan urutan byte jika diperlukan
+    if ($bom_be) {
+        if ($len >= 1 && ord($str[0]) == 0xfe && ord($str[1]) == 0xff) {
+            $str = mb_substr($str, $bom_size);
+        }
+    } else {
+        if ($len >= 1 && ord($str[0]) == 0xff && ord($str[1]) == 0xfe) {
+            $str = mb_substr($str, $bom_size);
+        }
+    }
+
+    $newstr = array(); // Menggunakan array untuk mengumpulkan karakter yang didekode
+
+    for ($i = 0; $i < $len; $i++) {
+        // Mengambil karakter UTF-16 dan membangun karakter yang sesuai
+        $char = mb_substr($str, $i, 1, 'UTF-16');
+        if ($char == "\x22\x8") { // Cek karakter spesial
+            $newstr[] = "\n"; // Ganti dengan karakter baris baru
+        } else {
+            $newstr[] = $char;
+        }
+    }
+
+    return implode('', $newstr); // Menggabungkan karakter menjadi string baru
+}
+
+
+
+	// public static function utf16_decode($str, $bom_be = TRUE) {
+	// 	if( strlen($str) < 2 ) return $str;
+	// 	$c0 = ord($str{0});
+	// 	$c1 = ord($str{1});
+	// 	if( $c0 == 0xfe && $c1 == 0xff ) { $str = substr($str,2); }
+	// 	elseif( $c0 == 0xff && $c1 == 0xfe ) { $str = substr($str,2); $bom_be = false; }
+	// 	$len = strlen($str);
+	// 	$newstr = '';
+	// 	for($i=0;$i<$len;$i+=2) {
+	// 		if( $bom_be ) { $val = ord($str{$i})   << 4; $val += ord($str{$i+1}); }
+	// 		else {        $val = ord($str{$i+1}) << 4; $val += ord($str{$i}); }
+	// 		$newstr .= ($val == 0x228) ? "\n" : chr($val);
+	// 	}
+	// 	return $newstr;
+	// }
 
 	/**
 	 * Get character count. First try mbstring, then iconv, finally strlen
