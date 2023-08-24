@@ -85,7 +85,7 @@ class PHPExcel_Cell_DefaultValueBinder implements PHPExcel_Cell_IValueBinder
 
         } elseif ($pValue[0] === '=' && strlen($pValue) > 1) {
             return PHPExcel_Cell_DataType::TYPE_FORMULA;
-
+        
         } elseif (is_bool($pValue)) {
             return PHPExcel_Cell_DataType::TYPE_BOOL;
 
