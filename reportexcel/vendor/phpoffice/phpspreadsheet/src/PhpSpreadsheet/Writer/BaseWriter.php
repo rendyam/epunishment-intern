@@ -111,6 +111,7 @@ abstract class BaseWriter implements IWriter
      */
     public function openFileHandle($filename): void
     {
+        
         if (is_resource($filename)) {
             $this->fileHandle = $filename;
             $this->shouldCloseFile = false;
@@ -132,6 +133,7 @@ abstract class BaseWriter implements IWriter
 
         $this->fileHandle = $fileHandle;
         $this->shouldCloseFile = true;
+
     }
 
     /**

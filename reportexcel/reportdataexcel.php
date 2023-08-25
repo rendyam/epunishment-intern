@@ -1,6 +1,12 @@
 <?php
 include('../koneksi/connect-db.php');
 require 'vendor/autoload.php';
+
+$directory = 'temp';
+	if (!is_dir($directory)) {
+   	     mkdir($directory, 0777, true);
+	}
+
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
  
@@ -75,9 +81,31 @@ $styleArray = [
 $i = $i - 1;
 $sheet->getStyle('A1:D'.$i)->applyFromArray($styleArray);
  
- 
+date_default_timezone_set('Asia/Jakarta'); // Atur zona waktu sesuai dengan lokasi Anda
+
+$currentTime = date('Y-m-d H-i-s'); // Mendapatkan waktu saat ini dengan zona waktu yang diatur
+$fileName = 'Data Pelanggaran PT KBS ' . $currentTime . '.xlsx';
+
 $writer = new Xlsx($spreadsheet);
-$writer->save('Data Pelanggaran PT KBS.xlsx');
+$writer->save($fileName);
+
+
+// Simpan file Excel ke dalam direktori tempat file sementara
+$tempFilePath = 'temp/' . $fileName;
+$writer->save($tempFilePath);
+
+// Set header HTTP untuk memberi tahu browser bahwa ini adalah file Excel yang akan diunduh
+header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+header('Content-Disposition: attachment;filename="' . $fileName . '"');
+header('Cache-Control: max-age=0');
+
+// Baca file Excel dan kirimkan ke output
+readfile($tempFilePath);
+
+// Hapus file sementara setelah diunduh
+unlink($tempFilePath);
+
+
 
 } catch (Exception $e) {
     echo $e->getMessage();
