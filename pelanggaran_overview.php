@@ -199,7 +199,7 @@ if (isset($_POST['filter_date']) and $_SERVER['REQUEST_METHOD'] == "POST") {
                         <div class="tbl-row">
                             <div class="tbl-cell">
                                 <div class="pull-right">
-                                    <?php echo "<a href='pelanggaran_overview_export_excel.php' type='button' class='btn btn-inline'><i class='fa fa-file-excel-o'></i> Export Excel</a>"; ?>
+                                    <?php echo "<a href='../reportexcel/reportdataexcel.php' type='button' class='btn btn-inline'><i class='fa fa-file-excel-o'></i> Export Excel</a>"; ?>
                                 </div>
                             </div>
                         </div>
